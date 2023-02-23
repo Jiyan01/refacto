@@ -16,11 +16,10 @@ class Shop {
       if (item.name === 'Sulfuras, Hand of Ragnaros') {
         return;
       }
-
-      let degradationFactor = 1; // Par défaut, la qualité se dégrade d'un point
-      
-      if (item.name.startsWith('Conjured')) {
-        degradationFactor = 2; // Si l'item est "Conjured", la qualité se dégrade de deux points
+  
+      let degradationFactor = 1;
+      if (item.name.includes('Conjured')) {
+        degradationFactor = 2;
       }
   
       if (item.name === 'Aged Brie' || item.name === 'Backstage passes to a TAFKAL80ETC concert') {
@@ -38,6 +37,9 @@ class Shop {
       } else {
         if (item.quality > 0) {
           item.quality -= degradationFactor;
+          if (item.name.includes('Conjured') && item.sellIn <= 0) {
+            item.quality -= degradationFactor;
+          }
         }
       }
   
@@ -48,11 +50,17 @@ class Shop {
           if (item.quality < 50) {
             item.quality += 1;
           }
+          if (item.sellIn <= 0 && item.quality > 0) {
+            item.quality = 0;
+          }
         } else if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
           item.quality = 0;
         } else {
           if (item.quality > 0) {
             item.quality -= degradationFactor;
+            if (item.name.includes('Conjured')) {
+              item.quality -= degradationFactor;
+            }
           }
         }
       }
